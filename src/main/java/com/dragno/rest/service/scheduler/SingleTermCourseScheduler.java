@@ -5,14 +5,12 @@ import com.dragno.rest.service.model.Course;
 import com.dragno.rest.service.model.IntermediateSchedule;
 import com.google.common.collect.Queues;
 
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Created by Anthony on 7/9/2017.
@@ -22,26 +20,16 @@ public class SingleTermCourseScheduler implements CourseScheduler {
     private final ForkJoinPool pool;
     private final ScheduleScorer scorer;
 
-    public SingleTermCourseScheduler(ScheduleScorer scorer) {
+    public SingleTermCourseScheduler(ScheduleScorer scorer, ForkJoinPool pool) {
         this.scorer = scorer;
-        pool = new ForkJoinPool();
+        this.pool = pool;
     }
 
     @Override
-    public Set<Course> scheduleCourses(Set<Set<Course>> courses) throws InterruptedException {
+    public Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses) throws InterruptedException {
         ConcurrentLinkedQueue<IntermediateSchedule> results = Queues.newConcurrentLinkedQueue();
-        PriorityQueue<Set<Course>> availableCourses = new PriorityQueue<>(Comparator.comparingInt(Set::size));
-
-        addCoursesByActivity(availableCourses, courses);
-        executeAndAwaitCompletion(availableCourses, results);
+        executeAndAwaitCompletion(courses, results);
         return getBestSchedule(results);
-    }
-
-    private void addCoursesByActivity(PriorityQueue<Set<Course>> availableCourses, Set<Set<Course>> courses) {
-        courses.forEach(courseSet -> availableCourses.addAll(
-                courseSet.stream()
-                         .collect(Collectors.groupingBy(Course::getActivity, Collectors.toSet()))
-                         .values()));
     }
 
     private void executeAndAwaitCompletion(PriorityQueue<Set<Course>> availableCourses,

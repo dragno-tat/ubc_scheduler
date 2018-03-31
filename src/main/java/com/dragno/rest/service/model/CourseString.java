@@ -1,5 +1,7 @@
 package com.dragno.rest.service.model;
 
+import com.google.common.base.Objects;
+
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,4 +57,20 @@ public class CourseString {
         return course.split("\\s")[1];
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CourseString that = (CourseString) o;
+        return Objects.equal(course, that.course);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(course);
+    }
 }

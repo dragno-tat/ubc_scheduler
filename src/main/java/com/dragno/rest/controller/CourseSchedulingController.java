@@ -2,6 +2,7 @@ package com.dragno.rest.controller;
 
 
 import com.dragno.rest.service.CourseSchedulingService;
+import com.dragno.rest.service.exception.NoValidScheduleException;
 import com.dragno.rest.service.model.ScheduleOptions;
 import com.dragno.rest.service.model.SchedulingError;
 
@@ -36,6 +37,9 @@ public class CourseSchedulingController {
             return Response.ok().entity(CourseSchedulingService.getInstance().scheduleCourses(options)).build();
         } catch (InterruptedException e) {
             return Response.status(500).entity(new SchedulingError("Scheduling was interrupted")).build();
+        } catch (NoValidScheduleException e) {
+            return Response.status(404).entity(new SchedulingError("No valid schedule is possible for the criteria"))
+                    .build();
         }
     }
 }

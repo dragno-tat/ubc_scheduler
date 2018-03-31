@@ -2,6 +2,7 @@ package com.dragno.rest.service.scheduler;
 
 import com.dragno.rest.service.model.Course;
 
+import java.util.PriorityQueue;
 import java.util.Set;
 
 /**
@@ -9,5 +10,5 @@ import java.util.Set;
  */
 public interface CourseScheduler {
 
-    Set<Course> scheduleCourses(Set<Set<Course>> courses) throws InterruptedException;
+    Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses) throws InterruptedException;
 }

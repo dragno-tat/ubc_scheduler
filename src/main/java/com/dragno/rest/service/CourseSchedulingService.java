@@ -1,5 +1,6 @@
 package com.dragno.rest.service;
 
+import com.dragno.rest.service.exception.NoValidScheduleException;
 import com.dragno.rest.service.model.Course;
 import com.dragno.rest.service.model.CourseString;
 import com.dragno.rest.service.model.ScheduleOptions;
@@ -11,20 +12,17 @@ import com.dragno.rest.service.scheduler.SingleTermCourseScheduler;
 import com.dragno.rest.service.scheduler.ssc.SSCCourseRetriever;
 import com.google.common.collect.*;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
 public class CourseSchedulingService {
 
     private static CourseSchedulingService instance;
 
-    private CourseScheduler scheduler;
-
     private Table<Integer,Character,HashMap<CourseString, Set<Course>>> coursesCache;
 
-    private CourseSchedulingService(CourseScheduler scheduler) {
-        this.scheduler = scheduler;
+    private CourseSchedulingService() {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         coursesCache = ArrayTable.create(ImmutableSet.of(currentYear-1,currentYear),
                 ImmutableSet.of('W', 'S'));
@@ -32,17 +30,30 @@ public class CourseSchedulingService {
 
     public static CourseSchedulingService getInstance() {
         if(instance == null) {
-            instance = new CourseSchedulingService(new SingleTermCourseScheduler(new MinimizeTimeAtSchoolScorer()));
+            instance = new CourseSchedulingService();
         }
         return instance;
     }
 
     public Set<Course> scheduleCourses(ScheduleOptions options) throws InterruptedException {
-        Set<Set<Course>> allSelectedCourses = Sets.newHashSet();
+        CourseScheduler scheduler = new SingleTermCourseScheduler(new MinimizeTimeAtSchoolScorer(), new ForkJoinPool());
+        PriorityQueue<Set<Course>> courses = new PriorityQueue<>(Comparator.comparingInt(Set::size));
         CoursesFilterer filterer = createFilterer(options);
-        options.getCourses().forEach(name -> allSelectedCourses.add(filterer.filter(getOrRetrieveCourses(
-                options.getSessyr(), options.getSesscd(), new CourseString(name)))));
-        return scheduler.scheduleCourses(allSelectedCourses);
+
+        for(String name : options.getCourses()) {
+            getOrRetrieveCourses(options.getSessyr(), options.getSesscd(), new CourseString(name))
+                    .stream()
+                    .collect(Collectors.groupingBy(Course::getActivity, Collectors.toSet()))
+                    .values()
+                    .forEach(set -> {
+                        Set<Course> filtered = filterer.filter(set);
+                        if(filtered.isEmpty()) {
+                            throw new NoValidScheduleException();
+                        }
+                        courses.add(filtered);
+                    });
+        }
+        return scheduler.scheduleCourses(courses);
     }
 
     private CoursesFilterer createFilterer(ScheduleOptions options) {
