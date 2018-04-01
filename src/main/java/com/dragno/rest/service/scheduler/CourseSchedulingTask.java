@@ -7,6 +7,7 @@ import com.dragno.rest.service.model.Schedule;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Phaser;
 import java.util.concurrent.RecursiveAction;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -22,18 +23,22 @@ public class CourseSchedulingTask extends RecursiveAction {
     private ConcurrentLinkedQueue<IntermediateSchedule> results;
     private PriorityQueue<Set<Course>> availableCourses;
     private IntermediateSchedule intermediateSchedule;
+    private Phaser phaser;
 
     public CourseSchedulingTask(PriorityQueue<Set<Course>> availableCourses, ScheduleScorer scorer,
-            ConcurrentLinkedQueue<IntermediateSchedule> results) {
-        this(availableCourses, new IntermediateSchedule(), scorer, results);
+            ConcurrentLinkedQueue<IntermediateSchedule> results, Phaser phaser) {
+        this(availableCourses, new IntermediateSchedule(), scorer, results, phaser);
     }
 
     private CourseSchedulingTask(PriorityQueue<Set<Course>> availableCourses, IntermediateSchedule
-            intermediateSchedule, ScheduleScorer scorer, ConcurrentLinkedQueue<IntermediateSchedule> results) {
+            intermediateSchedule, ScheduleScorer scorer, ConcurrentLinkedQueue<IntermediateSchedule> results,
+            Phaser phaser) {
         this.availableCourses = new PriorityQueue<>(availableCourses);
         this.intermediateSchedule = intermediateSchedule;
         this.scorer = scorer;
         this.results = results;
+        this.phaser = phaser;
+        phaser.register();
     }
 
     @Override
@@ -43,6 +48,7 @@ public class CourseSchedulingTask extends RecursiveAction {
         } else {
             forkTasks();
         }
+        phaser.arriveAndDeregister();
     }
 
     private void computeSequentially() {
@@ -82,7 +88,7 @@ public class CourseSchedulingTask extends RecursiveAction {
         Schedule mergedSchedule = intermediateSchedule.getSchedule().or(course.getSchedule());
         return new CourseSchedulingTask(availableCourses,
                 new IntermediateSchedule(intermediateSchedule, mergedSchedule, course),
-                scorer, results);
+                scorer, results, phaser);
     }
 
 }

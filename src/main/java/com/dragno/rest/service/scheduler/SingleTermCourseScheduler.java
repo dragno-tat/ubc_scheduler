@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Phaser;
 
 /**
  * Created by Anthony on 7/9/2017.
@@ -34,9 +34,9 @@ public class SingleTermCourseScheduler implements CourseScheduler {
 
     private void executeAndAwaitCompletion(PriorityQueue<Set<Course>> availableCourses,
             ConcurrentLinkedQueue<IntermediateSchedule> results) throws InterruptedException {
-        pool.execute(new CourseSchedulingTask(availableCourses, scorer, results));
-        pool.shutdown();
-        pool.awaitTermination(180, TimeUnit.SECONDS);
+        Phaser phaser = new Phaser(1);
+        pool.execute(new CourseSchedulingTask(availableCourses, scorer, results, phaser));
+        phaser.arriveAndAwaitAdvance();
     }
 
     private Set<Course> getBestSchedule(ConcurrentLinkedQueue<IntermediateSchedule> results) {

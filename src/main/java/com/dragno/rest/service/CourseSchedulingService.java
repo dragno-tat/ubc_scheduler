@@ -22,10 +22,13 @@ public class CourseSchedulingService {
 
     private Table<Integer,Character,HashMap<CourseString, Set<Course>>> coursesCache;
 
+    private ForkJoinPool pool;
+
     private CourseSchedulingService() {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         coursesCache = ArrayTable.create(ImmutableSet.of(currentYear-1,currentYear),
                 ImmutableSet.of('W', 'S'));
+        pool = new ForkJoinPool();
     }
 
     public static CourseSchedulingService getInstance() {
@@ -36,7 +39,7 @@ public class CourseSchedulingService {
     }
 
     public Set<Course> scheduleCourses(ScheduleOptions options) throws InterruptedException {
-        CourseScheduler scheduler = new SingleTermCourseScheduler(new MinimizeTimeAtSchoolScorer(), new ForkJoinPool());
+        CourseScheduler scheduler = new SingleTermCourseScheduler(new MinimizeTimeAtSchoolScorer(), pool);
         PriorityQueue<Set<Course>> courses = new PriorityQueue<>(Comparator.comparingInt(Set::size));
         CoursesFilterer filterer = createFilterer(options);
 
