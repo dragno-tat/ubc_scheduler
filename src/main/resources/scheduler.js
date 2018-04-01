@@ -1,6 +1,61 @@
+let regenerateResultsTable = () => {
+    const resultsSection = document.getElementById('results-section');
+    while (resultsSection.firstChild) {
+        resultsSection.removeChild(resultsSection.firstChild);
+    }
+
+    const table = document.createElement('table');
+    table.className = 'table table-bordered';
+    const thead = document.createElement('thead');
+    const trHead = document.createElement('tr');
+    const thTime = document.createElement('th');
+    thTime.scope = 'col';
+    thTime.style.cssText = 'width: 10%';
+    const textTime = document.createTextNode('Time');
+    thTime.appendChild(textTime);
+    trHead.appendChild(thTime);
+    for(const day of ['Mon','Tue','Wed','Thu','Fri']) {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        th.style.cssText = 'width: 18%';
+        const text = document.createTextNode(day);
+        th.appendChild(text);
+        trHead.appendChild(th);
+    }
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+
+    let generateTimeString = (h, m) => {
+        let hs = (h < 10) ? '0' + h.toString() : h.toString();
+        let ms = (m === 0) ? '00' : '30';
+        return hs + ':' + ms;
+    };
+
+    for(let i = 8; i < 19; i++) {
+        for(let j = 0; j < 2; j++) {
+            const tr = document.createElement('tr');
+            const timeString = generateTimeString(i,j*30);
+            tr.id = timeString + '-row';
+            const th = document.createElement('th');
+            th.scope = 'row';
+            th.className = 'pt-1';
+            const text = document.createTextNode(timeString);
+            th.appendChild(text);
+            tr.appendChild(th);
+            for(let k = 0; k < 5; k++) {
+                const td = document.createElement('td');
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+    }
+
+
+    resultsSection.appendChild(table);
+};
+
 let displayCourseResults = function (courses) {
-    const tableNode = document.getElementById('results-section').querySelector('table');
-    tableNode.hidden = false;
+    regenerateResultsTable();
 
     const dayToIntMapper = (day) => {
         switch (day) {
