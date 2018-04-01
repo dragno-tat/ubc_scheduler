@@ -46,6 +46,7 @@ public class CourseSchedulingService {
         for(String name : options.getCourses()) {
             getOrRetrieveCourses(options.getSessyr(), options.getSesscd(), new CourseString(name))
                     .stream()
+                    .filter(c -> !isVantage(c))
                     .collect(Collectors.groupingBy(Course::getActivity, Collectors.toSet()))
                     .values()
                     .forEach(set -> {
@@ -90,5 +91,9 @@ public class CourseSchedulingService {
             coursesMap.put(courseName, courses);
         }
         return courses;
+    }
+
+    private boolean isVantage(Course course) {
+        return course.getSection().startsWith("V");
     }
 }
