@@ -21,6 +21,9 @@ public class CourseSchedulingController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response scheduleCourses(ScheduleOptions options) {
         String errorMessage = "";
+        if(options.getCourses().isEmpty()) {
+            errorMessage = "No courses selected";
+        }
         if(options.getTerm() != 1 && options.getTerm() != 2) {
             errorMessage = "Course term must be 1 or 2";
         }

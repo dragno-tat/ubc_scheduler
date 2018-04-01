@@ -56,6 +56,9 @@ public class CourseSchedulingService {
                         courses.add(filtered);
                     });
         }
+        if(courses.isEmpty()) {
+            throw new NoValidScheduleException();
+        }
         return scheduler.scheduleCourses(courses);
     }
 
