@@ -35,8 +35,6 @@ public class CourseSchedulingController {
         }
         try {
             return Response.ok().entity(CourseSchedulingService.getInstance().scheduleCourses(options)).build();
-        } catch (InterruptedException e) {
-            return Response.status(500).entity(new SchedulingError("Scheduling was interrupted")).build();
         } catch (NoValidScheduleException e) {
             return Response.status(404).entity(new SchedulingError("No valid schedule is possible for the criteria"))
                     .build();

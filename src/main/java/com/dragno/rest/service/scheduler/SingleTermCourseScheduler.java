@@ -26,14 +26,14 @@ public class SingleTermCourseScheduler implements CourseScheduler {
     }
 
     @Override
-    public Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses) throws InterruptedException {
+    public Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses) {
         ConcurrentLinkedQueue<IntermediateSchedule> results = Queues.newConcurrentLinkedQueue();
         executeAndAwaitCompletion(courses, results);
         return getBestSchedule(results);
     }
 
     private void executeAndAwaitCompletion(PriorityQueue<Set<Course>> availableCourses,
-            ConcurrentLinkedQueue<IntermediateSchedule> results) throws InterruptedException {
+            ConcurrentLinkedQueue<IntermediateSchedule> results) {
         Phaser phaser = new Phaser(1);
         pool.execute(new CourseSchedulingTask(availableCourses, scorer, results, phaser));
         phaser.arriveAndAwaitAdvance();

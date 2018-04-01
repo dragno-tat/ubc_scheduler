@@ -10,5 +10,5 @@ import java.util.Set;
  */
 public interface CourseScheduler {
 
-    Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses) throws InterruptedException;
+    Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses);
 }

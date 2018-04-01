@@ -38,7 +38,7 @@ public class CourseSchedulingService {
         return instance;
     }
 
-    public Set<Course> scheduleCourses(ScheduleOptions options) throws InterruptedException {
+    public Set<Course> scheduleCourses(ScheduleOptions options) {
         CourseScheduler scheduler = new SingleTermCourseScheduler(new MinimizeTimeAtSchoolScorer(), pool);
         PriorityQueue<Set<Course>> courses = new PriorityQueue<>(Comparator.comparingInt(Set::size));
         CoursesFilterer filterer = createFilterer(options);
