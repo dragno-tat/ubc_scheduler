@@ -39,8 +39,9 @@ public class CourseSchedulingController {
         try {
             return Response.ok().entity(CourseSchedulingService.getInstance().scheduleCourses(options)).build();
         } catch (NoValidScheduleException e) {
-            return Response.status(404).entity(new SchedulingError("No valid schedule is possible for the criteria"))
-                    .build();
+            return Response.status(404).entity(new SchedulingError(e.getMessage())).build();
+        } catch (IllegalStateException e) {
+            return Response.status(400).entity(new SchedulingError(e.getMessage())).build();
         }
     }
 }

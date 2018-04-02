@@ -6,11 +6,16 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 
 public class LocalTimeDeserializer extends JsonDeserializer<LocalTime> {
     @Override
     public LocalTime deserialize(JsonParser jsonParser,
             DeserializationContext deserializationContext) throws IOException {
-        return LocalTime.parse(jsonParser.getText());
+        try {
+            return LocalTime.parse(jsonParser.getText());
+        } catch (DateTimeParseException e) {
+            throw new IllegalStateException("Date attribute is invalid");
+        }
     }
 }

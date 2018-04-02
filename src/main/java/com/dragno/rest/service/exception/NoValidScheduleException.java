@@ -6,7 +6,7 @@ package com.dragno.rest.service.exception;
 public class NoValidScheduleException extends RuntimeException {
 
     public NoValidScheduleException() {
-        super();
+        this("No valid schedule is possible for the criteria");
     }
 
     public NoValidScheduleException(String message) {

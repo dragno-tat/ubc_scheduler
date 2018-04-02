@@ -52,13 +52,14 @@ public class CourseSchedulingService {
                     .forEach(set -> {
                         Set<Course> filtered = filterer.filter(set);
                         if(filtered.isEmpty()) {
-                            throw new NoValidScheduleException();
+                            throw new NoValidScheduleException("Some course activities were filtered out by the " +
+                                    "criteria");
                         }
                         courses.add(filtered);
                     });
         }
         if(courses.isEmpty()) {
-            throw new NoValidScheduleException();
+            throw new NoValidScheduleException("No courses were found that matched the criteria");
         }
         return scheduler.scheduleCourses(courses);
     }
