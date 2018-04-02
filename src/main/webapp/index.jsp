@@ -6,6 +6,7 @@
 </head>
 <body>
 <div class="container col-md-6">
+    <h2>Minimize Time at School</h2>
     <form>
         <div class="form-group">
             <label for="term-option">Term:</label>
