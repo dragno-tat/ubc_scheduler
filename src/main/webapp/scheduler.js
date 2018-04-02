@@ -126,7 +126,12 @@ document.getElementById('schedule-btn').addEventListener('click', function () {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             displayCourseResults(JSON.parse(xhr.responseText))
         } else {
-            alert(xhr.responseText)
+            try {
+                const msg = JSON.parse(xhr.responseText).message;
+                alert(msg);
+            } catch (e) {
+                alert(xhr.responseText)
+            }
         }
     };
     let req = {};

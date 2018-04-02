@@ -15,7 +15,7 @@ public class LocalTimeDeserializer extends JsonDeserializer<LocalTime> {
         try {
             return LocalTime.parse(jsonParser.getText());
         } catch (DateTimeParseException e) {
-            throw new IllegalStateException("Date attribute is invalid");
+            return null;
         }
     }
 }

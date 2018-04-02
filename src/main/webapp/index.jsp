@@ -16,36 +16,36 @@
             </select>
         </div>
         <div class="form-group">
-            <label>Earliest Start Time <input type="time" id="start-time"></label>
+            <label>Earliest Start Time <input type="time" id="start-time" value="08:00"></label>
         </div>
         <div class="form-group">
-            <label>Latest End Time <input type="time" id="end-time"></label>
+            <label>Latest End Time <input type="time" id="end-time" value="19:00"></label>
         </div>
         <div class="form-group" id="days-options">
             Days:
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input type="checkbox" name="check" value="MON">Monday
+                    <input type="checkbox" name="check" value="MON" checked>Monday
                 </label>
             </div>
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input type="checkbox" name="check" value="TUE">Tuesday
+                    <input type="checkbox" name="check" value="TUE" checked>Tuesday
                 </label>
             </div>
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input type="checkbox" name="check" value="WED">Wednesday
+                    <input type="checkbox" name="check" value="WED" checked>Wednesday
                 </label>
             </div>
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input type="checkbox" name="check" value="THU">Thursday
+                    <input type="checkbox" name="check" value="THU" checked>Thursday
                 </label>
             </div>
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
-                    <input type="checkbox" name="check" value="FRI">Friday
+                    <input type="checkbox" name="check" value="FRI" checked>Friday
                 </label>
             </div>
         </div>

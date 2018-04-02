@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CourseStringTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {"CPSC 110", "AB 111", "ANSC 459A", "CHEM121"})
+    @ValueSource(strings = {" CPSC 110", "AB 111 ", " ANSC 459A ", "CHEM121"})
     public void validCourseString(String course){
         new CourseString(course);
     }
