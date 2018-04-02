@@ -213,6 +213,18 @@ document.getElementById('add-break-btn').addEventListener('click', function () {
         startTimeLabel.appendChild(startTimeInput);
         divNode.appendChild(startTimeLabel);
     }
+
+    let spanNode = document.createElement('span');
+    spanNode.className = 'input-group-btn';
+    let textNode = document.createTextNode('Remove');
+    let buttonNode = document.createElement('button');
+    buttonNode.className = 'btn btn-danger';
+    buttonNode.type = 'button';
+    buttonNode.addEventListener('click', () => document.getElementById('breaks-group').removeChild(divNode));
+    buttonNode.appendChild(textNode);
+    spanNode.appendChild(buttonNode);
+    divNode.appendChild(spanNode);
+
     document.getElementById('breaks-group').appendChild(divNode);
 });
 
