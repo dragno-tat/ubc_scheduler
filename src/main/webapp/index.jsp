@@ -21,14 +21,6 @@
         <div class="form-group">
             <label>Latest End Time <input type="time" id="end-time"></label>
         </div>
-        <p>Select statuses to exclude:</p>
-        <div class="form-group">
-            <select id="status-options" class="mdb-select" multiple>
-                <option value="FULL">Full</option>
-                <option value="RESTRICTED">Restricted</option>
-                <option value="STT">STT</option>
-            </select>
-        </div>
         <div class="form-group" id="days-options">
             Days:
             <div class="form-check form-check-inline">
@@ -56,6 +48,14 @@
                     <input type="checkbox" name="check" value="FRI">Friday
                 </label>
             </div>
+        </div>
+        <p>Select statuses to exclude:</p>
+        <div class="form-group">
+            <select id="status-options" class="mdb-select" multiple>
+                <option value="FULL">Full</option>
+                <option value="RESTRICTED">Restricted</option>
+                <option value="STT">STT</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="sessyr-option">Session:</label>
