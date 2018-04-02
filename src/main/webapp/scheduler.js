@@ -94,22 +94,24 @@ let displayCourseResults = function (courses) {
                     trToMarkedChildren.set(currTr, set)
                 }
                 set.add(dayIndex)
-                // currTr.removeChild(currTr.children[dayIndex]);
             }
             const td = startTr.children[dayIndex];
             td.rowSpan = rowSpan.toString();
             const firstLine = document.createTextNode(course.dept + ' ' + course.id.toString());
-            const secondLine = document.createTextNode(course.section);
+            const secondLineLink = document.createElement('a');
+            secondLineLink.href = `https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=5&dept=${course.dept}&course=${course.id}&section=${course.section}`;
+            const secondLineText = document.createTextNode(course.section);
+            secondLineLink.appendChild(secondLineText);
             const br = document.createElement('br');
             td.appendChild(firstLine);
             td.appendChild(br);
-            td.appendChild(secondLine);
+            td.appendChild(secondLineLink);
             td.className = 'align-middle text-center'
         }
     }
 
     trToMarkedChildren.forEach((markedChildren, tr) => {
-        let children = Array.from(markedChildren)
+        let children = Array.from(markedChildren);
         children.sort((a,b) => b-a);
         children.forEach(c => {
             tr.removeChild(tr.children[c])
@@ -154,7 +156,7 @@ document.getElementById('schedule-btn').addEventListener('click', function () {
     }
     req.breaks = [];
     for (const inputGroup of document.getElementById('breaks-group').children) {
-        let b = {}
+        let b = {};
         b.day = inputGroup.querySelector('option:checked').value;
         b.startTime = inputGroup.querySelector('input[name="start"]').value;
         b.endTime = inputGroup.querySelector('input[name="end"]').value;
