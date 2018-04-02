@@ -51,7 +51,7 @@
         </div>
         <p>Select statuses to exclude:</p>
         <div class="form-group">
-            <select id="status-options" class="mdb-select" multiple>
+            <select id="status-options" class="form-control" multiple>
                 <option value="FULL">Full</option>
                 <option value="RESTRICTED">Restricted</option>
                 <option value="STT">STT</option>
@@ -72,6 +72,13 @@
             </div>
             <br />
             <button type="button" class="btn" id="add-course-btn">Add Course</button>
+        </div>
+        <label for="breaks-group">Breaks</label>
+        <div class="form-group">
+            <div id="breaks-group">
+            </div>
+            <br />
+            <button type="button" class="btn" id="add-break-btn">Add Break</button>
         </div>
         <button type="button" class="btn btn-primary" id="schedule-btn">Build Schedule</button>
     </form>

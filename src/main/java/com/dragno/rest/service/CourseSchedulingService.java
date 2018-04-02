@@ -71,6 +71,7 @@ public class CourseSchedulingService {
                 .days(options.getDays())
                 .statuses(getIncludedStatues(options.getExcludedStatuses()))
                 .term(options.getTerm())
+                .breaks(options.getBreaks())
                 .build();
     }
 

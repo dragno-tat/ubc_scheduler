@@ -50,7 +50,6 @@ let regenerateResultsTable = () => {
         }
     }
 
-
     resultsSection.appendChild(table);
 };
 
@@ -153,6 +152,14 @@ document.getElementById('schedule-btn').addEventListener('click', function () {
     for (const c of document.getElementById('courses-group').querySelectorAll('input')) {
         req.courses.push(c.value);
     }
+    req.breaks = [];
+    for (const inputGroup of document.getElementById('breaks-group').children) {
+        let b = {}
+        b.day = inputGroup.querySelector('option:checked').value;
+        b.startTime = inputGroup.querySelector('input[name="start"]').value;
+        b.endTime = inputGroup.querySelector('input[name="end"]').value;
+        req.breaks.push(b);
+    }
     xhr.send(JSON.stringify(req));
 });
 
@@ -179,6 +186,34 @@ document.getElementById('add-course-btn').addEventListener('click', function () 
     divNode.appendChild(spanNode);
 
     document.getElementById('courses-group').appendChild(divNode);
+});
+
+document.getElementById('add-break-btn').addEventListener('click', function () {
+    const divNode = document.createElement('div');
+    divNode.className = 'input-group';
+
+    const selectNode = document.createElement('select');
+    selectNode.className = 'form-control';
+    for(const day of ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']) {
+        const optionNode = document.createElement('option');
+        optionNode.value = day.toUpperCase();
+        const textNode = document.createTextNode(day);
+        optionNode.appendChild(textNode);
+        selectNode.appendChild(optionNode);
+    }
+    divNode.appendChild(selectNode);
+
+    for(const text of ['Start', 'End']) {
+        const startTimeLabel = document.createElement('label');
+        const startTimeText = document.createTextNode(text + ' Time');
+        startTimeLabel.appendChild(startTimeText);
+        let startTimeInput = document.createElement('input');
+        startTimeInput.type = 'time';
+        startTimeInput.name = text.toLowerCase();
+        startTimeLabel.appendChild(startTimeInput);
+        divNode.appendChild(startTimeLabel);
+    }
+    document.getElementById('breaks-group').appendChild(divNode);
 });
 
 for (let i = (new Date()).getFullYear() - 1; i <= (new Date()).getFullYear(); i++) {

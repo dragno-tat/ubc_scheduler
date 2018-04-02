@@ -20,12 +20,7 @@ class CoursesFiltererTest {
     @Test
     public void filterBeforeTime() {
         List<Course> createdCourses = Lists.newArrayList();
-        for(int i = 0; i < 3; i++) {
-            Course course = mock(Course.class);
-            Schedule schedule = new Schedule(Sets.newHashSet(Day.MON), LocalTime.of(i+8,0), LocalTime.of(i+9,30));
-            when(course.getSchedule()).thenReturn(schedule);
-            createdCourses.add(course);
-        }
+        createCourses(createdCourses);
 
         Set<Course> actualCourses = new CoursesFilterer.Builder()
                 .before(LocalTime.of(10, 0))
@@ -39,12 +34,7 @@ class CoursesFiltererTest {
     @Test
     public void filterAfterTime() {
         List<Course> createdCourses = Lists.newArrayList();
-        for(int i = 0; i < 3; i++) {
-            Course course = mock(Course.class);
-            Schedule schedule = new Schedule(Sets.newHashSet(Day.MON), LocalTime.of(i+8,0), LocalTime.of(i+9,30));
-            when(course.getSchedule()).thenReturn(schedule);
-            createdCourses.add(course);
-        }
+        createCourses(createdCourses);
 
         Set<Course> actualCourses = new CoursesFilterer.Builder()
                 .after(LocalTime.of(10, 0))
@@ -73,6 +63,33 @@ class CoursesFiltererTest {
 
         assertThat(actualCourses).hasSize(2);
         assertThat(actualCourses).contains(originalCourses.get(0)).contains(originalCourses.get(1));
+    }
+
+    @Test
+    public void filterBreaks() {
+        List<Course> createdCourses = Lists.newArrayList();
+        createCourses(createdCourses);
+
+        Set<Schedule> breaks = Sets.newHashSet();
+        breaks.add(new Schedule(Sets.newHashSet(Day.MON), LocalTime.of(9,0), LocalTime.of(10,0)));
+        breaks.add(new Schedule(Sets.newHashSet(Day.WED), LocalTime.of(10,0), LocalTime.of(11,0)));
+
+        Set<Course> actualCourses = new CoursesFilterer.Builder()
+                .breaks(breaks)
+                .build()
+                .filter(Sets.newHashSet(createdCourses));
+
+        assertThat(actualCourses).hasSize(1);
+        assertThat(Iterables.getOnlyElement(actualCourses)).isEqualTo(createdCourses.get(createdCourses.size() - 1));
+    }
+
+    private void createCourses(List<Course> createdCourses) {
+        for(int i = 0; i < 3; i++) {
+            Course course = mock(Course.class);
+            Schedule schedule = new Schedule(Sets.newHashSet(Day.MON), LocalTime.of(i+8,0), LocalTime.of(i+9,30));
+            when(course.getSchedule()).thenReturn(schedule);
+            createdCourses.add(course);
+        }
     }
 
     @Test

@@ -18,6 +18,7 @@ public class ScheduleOptions {
     private LocalTime endTime;
     private Set<Status> excludedStatuses;
     private Set<Day> days;
+    private Set<Schedule> breaks;
     private int sessyr;
     private char sesscd;
 
@@ -25,7 +26,8 @@ public class ScheduleOptions {
     public ScheduleOptions(@JsonProperty("courses") Set<String> courses, @JsonProperty("term") int term,
             @JsonProperty("startTime") LocalTime startTime, @JsonProperty("endTime") LocalTime endTime,
             @JsonProperty("excludedStatuses") Set<Status> excludedStatuses, @JsonProperty("days") Set<Day> days,
-            @JsonProperty("sessyr") int sessyr, @JsonProperty("sesscd") char sesscd) {
+            @JsonProperty("breaks") Set<Schedule> breaks, @JsonProperty("sessyr") int sessyr,
+            @JsonProperty("sesscd") char sesscd) {
         this.courses = courses;
         this.term = term;
         if(startTime == null) {
@@ -40,6 +42,7 @@ public class ScheduleOptions {
         }
         this.excludedStatuses = excludedStatuses;
         this.days = days;
+        this.breaks = breaks;
         this.sessyr = sessyr;
         this.sesscd = sesscd;
     }
@@ -66,6 +69,10 @@ public class ScheduleOptions {
 
     public Set<Day> getDays() {
         return days;
+    }
+
+    public Set<Schedule> getBreaks() {
+        return breaks;
     }
 
     public int getSessyr() {

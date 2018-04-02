@@ -1,9 +1,6 @@
 package com.dragno.rest.service.scheduler;
 
-import com.dragno.rest.service.model.Activity;
-import com.dragno.rest.service.model.Course;
-import com.dragno.rest.service.model.Day;
-import com.dragno.rest.service.model.Status;
+import com.dragno.rest.service.model.*;
 import com.google.common.collect.Sets;
 
 import java.time.LocalTime;
@@ -57,6 +54,18 @@ public class CoursesFilterer {
             Set<Day> undesiredDays = Sets.newHashSet(Day.values());
             undesiredDays.removeAll(days);
             predicates.add(course -> course.getSchedule().cardinality(undesiredDays) == 0);
+            return this;
+        }
+
+        public Builder breaks(Set<Schedule> breaks) {
+            predicates.add(course -> {
+                for(Schedule b : breaks) {
+                    if(course.getSchedule().intersects(b)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
             return this;
         }
 

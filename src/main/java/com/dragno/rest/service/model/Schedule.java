@@ -1,7 +1,11 @@
 package com.dragno.rest.service.model;
 
 
+import com.dragno.rest.util.LocalTimeDeserializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.Sets;
 
 import java.time.LocalTime;
 import java.util.Set;
@@ -41,6 +45,12 @@ public class Schedule {
         thursday = schedule.thursday;
         friday = schedule.friday;
         days.forEach(day -> addTimeForDay(day, startTime, endTime));
+    }
+
+    public Schedule(@JsonProperty("day") Day day,
+            @JsonProperty("startTime") @JsonDeserialize(using = LocalTimeDeserializer.class) LocalTime startTime,
+            @JsonProperty ("endTime") @JsonDeserialize(using = LocalTimeDeserializer.class) LocalTime endTime) {
+        this(Sets.newHashSet(day), startTime, endTime);
     }
 
     public Schedule(Set<Day> days, LocalTime startTime, LocalTime endTime) {
