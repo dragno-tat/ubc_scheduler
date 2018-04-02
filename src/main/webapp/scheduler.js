@@ -189,9 +189,11 @@ document.getElementById('add-course-btn').addEventListener('click', function () 
 });
 
 document.getElementById('add-break-btn').addEventListener('click', function () {
-    const divNode = document.createElement('div');
-    divNode.className = 'input-group';
+    const inputGroupDiv = document.createElement('div');
+    inputGroupDiv.className = 'input-group';
 
+    const selectDiv = document.createElement('div');
+    selectDiv.className = 'col-md-3';
     const selectNode = document.createElement('select');
     selectNode.className = 'form-control';
     for(const day of ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']) {
@@ -201,31 +203,38 @@ document.getElementById('add-break-btn').addEventListener('click', function () {
         optionNode.appendChild(textNode);
         selectNode.appendChild(optionNode);
     }
-    divNode.appendChild(selectNode);
+    selectDiv.appendChild(selectNode);
+    inputGroupDiv.appendChild(selectDiv);
 
     for(const text of ['Start', 'End']) {
-        const startTimeLabel = document.createElement('label');
-        const startTimeText = document.createTextNode(text + ' Time');
-        startTimeLabel.appendChild(startTimeText);
-        let startTimeInput = document.createElement('input');
-        startTimeInput.type = 'time';
-        startTimeInput.name = text.toLowerCase();
-        startTimeLabel.appendChild(startTimeInput);
-        divNode.appendChild(startTimeLabel);
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'col-md-3';
+        const timeLabel = document.createElement('label');
+        const timeText = document.createTextNode(text + ' Time ');
+        timeLabel.appendChild(timeText);
+        let timeInput = document.createElement('input');
+        timeInput.type = 'time';
+        timeInput.name = text.toLowerCase();
+        timeLabel.appendChild(timeInput);
+        timeDiv.appendChild(timeLabel);
+        inputGroupDiv.appendChild(timeDiv);
     }
 
+    const removeDiv = document.createElement('div');
+    removeDiv.className = 'col-md-3';
     let spanNode = document.createElement('span');
     spanNode.className = 'input-group-btn';
     let textNode = document.createTextNode('Remove');
     let buttonNode = document.createElement('button');
     buttonNode.className = 'btn btn-danger';
     buttonNode.type = 'button';
-    buttonNode.addEventListener('click', () => document.getElementById('breaks-group').removeChild(divNode));
+    buttonNode.addEventListener('click', () => document.getElementById('breaks-group').removeChild(inputGroupDiv));
     buttonNode.appendChild(textNode);
     spanNode.appendChild(buttonNode);
-    divNode.appendChild(spanNode);
+    removeDiv.appendChild(spanNode);
+    inputGroupDiv.appendChild(removeDiv);
 
-    document.getElementById('breaks-group').appendChild(divNode);
+    document.getElementById('breaks-group').appendChild(inputGroupDiv);
 });
 
 for (let i = (new Date()).getFullYear() - 1; i <= (new Date()).getFullYear(); i++) {

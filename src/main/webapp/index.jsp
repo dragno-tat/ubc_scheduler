@@ -82,7 +82,6 @@
         </div>
         <button type="button" class="btn btn-primary" id="schedule-btn">Build Schedule</button>
     </form>
-
     <div id="results-section">
     </div>
 </div>
