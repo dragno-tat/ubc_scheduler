@@ -24,7 +24,6 @@
         <p>Select statuses to exclude:</p>
         <div class="form-group">
             <select id="status-options" class="mdb-select" multiple>
-                <option value="NA">N/A</option>
                 <option value="FULL">Full</option>
                 <option value="RESTRICTED">Restricted</option>
                 <option value="STT">STT</option>
