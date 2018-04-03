@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class CourseSchedulingService {
 
     private static CourseSchedulingService instance;
@@ -50,16 +52,15 @@ public class CourseSchedulingService {
                     .collect(Collectors.groupingBy(Course::getActivity, Collectors.toSet()))
                     .values()
                     .forEach(set -> {
+                        Course course = checkNotNull(Iterables.getFirst(set, null));
+                        String courseName = course.getDept() + " " + course.getId();
                         Set<Course> filtered = filterer.filter(set);
                         if(filtered.isEmpty()) {
-                            throw new NoValidScheduleException("Some course activities were filtered out by the " +
-                                    "criteria");
+                            throw new NoValidScheduleException("No " + course.getActivity().toString().toLowerCase() +
+                                    "s for " + courseName + " fit the criteria");
                         }
                         courses.add(filtered);
                     });
-        }
-        if(courses.isEmpty()) {
-            throw new NoValidScheduleException("No courses were found that matched the criteria");
         }
         return scheduler.scheduleCourses(courses);
     }
@@ -91,6 +92,10 @@ public class CourseSchedulingService {
         if(courses == null) {
             courses = new SSCCourseRetriever(sessyr, sesscd).retrieve(courseName);
             coursesMap.put(courseName, courses);
+        }
+        if(courses.isEmpty()) {
+            throw new NoValidScheduleException("No sections found for course: " + courseName.getCourse() + " in " +
+                    sessyr + sesscd);
         }
         return courses;
     }
