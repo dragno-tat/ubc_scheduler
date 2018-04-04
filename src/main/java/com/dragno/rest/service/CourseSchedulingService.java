@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CourseSchedulingService {
 
-    private static CourseSchedulingService instance;
+    private static CourseSchedulingService instance = new CourseSchedulingService();
 
     private Table<Integer,Character,HashMap<CourseString, Set<Course>>> coursesCache;
 
@@ -34,9 +34,6 @@ public class CourseSchedulingService {
     }
 
     public static CourseSchedulingService getInstance() {
-        if(instance == null) {
-            instance = new CourseSchedulingService();
-        }
         return instance;
     }
 
