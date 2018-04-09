@@ -55,6 +55,7 @@ let regenerateResultsTable = () => {
 
 let displayCourseResults = function (courses) {
     regenerateResultsTable();
+    document.getElementById('results-section').scrollIntoView();
 
     const dayToIntMapper = (day) => {
         switch (day) {
