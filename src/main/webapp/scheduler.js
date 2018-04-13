@@ -53,7 +53,7 @@ let regenerateResultsTable = () => {
     resultsSection.appendChild(table);
 };
 
-let displayCourseResults = function (courses) {
+let displayCourseResults = function (results) {
     regenerateResultsTable();
     document.getElementById('results-section').scrollIntoView();
 
@@ -79,7 +79,7 @@ let displayCourseResults = function (courses) {
 
     let trToMarkedChildren = new Map();
 
-    for(const course of courses) {
+    for(const course of results.courses) {
         for(let i = course.schedule.length - 1; i >= 0 ; i--) {
             const day = course.schedule[i];
             const minDiff = parseTimeInMin(day.endTime) - parseTimeInMin(day.startTime);
@@ -100,7 +100,7 @@ let displayCourseResults = function (courses) {
             td.rowSpan = rowSpan.toString();
             const firstLine = document.createTextNode(course.dept + ' ' + course.id.toString());
             const secondLineLink = document.createElement('a');
-            secondLineLink.href = `https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=5&dept=${course.dept}&course=${course.id}&section=${course.section}`;
+            secondLineLink.href = `https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=5&dept=${course.dept}&course=${course.id}&section=${course.section}&sessyr=${results.sessyr}&sesscd=${results.sesscd}`;
             const secondLineText = document.createTextNode(course.section);
             secondLineLink.appendChild(secondLineText);
             const br = document.createElement('br');

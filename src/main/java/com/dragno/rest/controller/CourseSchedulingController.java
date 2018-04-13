@@ -3,6 +3,7 @@ package com.dragno.rest.controller;
 
 import com.dragno.rest.service.CourseSchedulingService;
 import com.dragno.rest.service.exception.NoValidScheduleException;
+import com.dragno.rest.service.model.CourseResults;
 import com.dragno.rest.service.model.ScheduleOptions;
 import com.dragno.rest.service.model.SchedulingError;
 
@@ -37,11 +38,11 @@ public class CourseSchedulingController {
             return Response.status(400).entity(new SchedulingError(errorMessage)).build();
         }
         try {
-            return Response.ok().entity(CourseSchedulingService.getInstance().scheduleCourses(options)).build();
-        } catch (NoValidScheduleException e) {
+            CourseResults results = new CourseResults(options.getSessyr(), options.getSesscd(),
+                    CourseSchedulingService.getInstance().scheduleCourses(options));
+            return Response.ok().entity(results).build();
+        } catch (NoValidScheduleException | IllegalStateException e) {
             return Response.status(404).entity(new SchedulingError(e.getMessage())).build();
-        } catch (IllegalStateException e) {
-            return Response.status(400).entity(new SchedulingError(e.getMessage())).build();
         }
     }
 }
