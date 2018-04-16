@@ -1,7 +1,7 @@
 package com.dragno.rest.service.scheduler.ssc;
 
 import com.dragno.rest.service.model.*;
-import com.dragno.rest.service.model.builder.CourseBuilder;
+import com.dragno.rest.service.model.builder.CourseSectionBuilder;
 import com.google.common.collect.Sets;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,11 +29,11 @@ class SSCCourseDocumentParser {
 
     private CourseSection handleCourseParsing(CourseString courseString, Set<CourseSection> sections, CourseSection previousSection,
                                        Element tr) {
-        CourseBuilder builder = new CourseBuilder()
+        CourseSectionBuilder builder = new CourseSectionBuilder()
                 .id(Integer.parseInt(courseString.getCourseId()))
                 .dept(courseString.getDepartment());
 
-        if (parseCourse(builder, tr)) {
+        if (parseCourseSection(builder, tr)) {
             if (isPartOfPreviousSection(builder.getSection())){
                 Schedule mergedSchedule = previousSection.getSchedule().or(builder.getSchedule());
                 builder.schedule(mergedSchedule).section(previousSection.getSection());
@@ -50,7 +50,7 @@ class SSCCourseDocumentParser {
         return tr.className().contains("section");
     }
 
-    private boolean parseCourse(CourseBuilder builder, Element tr) {
+    private boolean parseCourseSection(CourseSectionBuilder builder, Element tr) {
         Elements tdTags = tr.getElementsByTag("td");
         try {
             builder.status(parseStatus(tdTags.get(0)))

@@ -8,7 +8,7 @@ import com.dragno.rest.service.model.Status;
 /**
  * Created by Anthony on 7/8/2017.
  */
-public class CourseBuilder {
+public class CourseSectionBuilder {
 
     private String dept;
     private int id;
@@ -18,37 +18,37 @@ public class CourseBuilder {
     private int term;
     private Schedule schedule;
 
-    public CourseBuilder dept(String dept) {
+    public CourseSectionBuilder dept(String dept) {
         this.dept = dept;
         return this;
     }
 
-    public CourseBuilder id(int id) {
+    public CourseSectionBuilder id(int id) {
         this.id = id;
         return this;
     }
 
-    public CourseBuilder status(Status status) {
+    public CourseSectionBuilder status(Status status) {
         this.status = status;
         return this;
     }
 
-    public CourseBuilder section(String section) {
+    public CourseSectionBuilder section(String section) {
         this.section = section;
         return this;
     }
 
-    public CourseBuilder activity(Activity activity) {
+    public CourseSectionBuilder activity(Activity activity) {
         this.activity = activity;
         return this;
     }
 
-    public CourseBuilder term(int term) {
+    public CourseSectionBuilder term(int term) {
         this.term = term;
         return this;
     }
 
-    public CourseBuilder schedule(Schedule schedule) {
+    public CourseSectionBuilder schedule(Schedule schedule) {
         this.schedule = schedule;
         return this;
     }
