@@ -1,7 +1,7 @@
 package com.dragno.rest.service;
 
 import com.dragno.rest.service.exception.NoValidScheduleException;
-import com.dragno.rest.service.model.Course;
+import com.dragno.rest.service.model.CourseSection;
 import com.dragno.rest.service.model.CourseString;
 import com.dragno.rest.service.model.ScheduleOptions;
 import com.dragno.rest.service.model.Status;
@@ -22,7 +22,7 @@ public class CourseSchedulingService {
 
     private static CourseSchedulingService instance = new CourseSchedulingService();
 
-    private Table<Integer,Character,HashMap<CourseString, Set<Course>>> coursesCache;
+    private Table<Integer,Character,HashMap<CourseString, Set<CourseSection>>> coursesCache;
 
     private ForkJoinPool pool;
 
@@ -37,29 +37,29 @@ public class CourseSchedulingService {
         return instance;
     }
 
-    public Set<Course> scheduleCourses(ScheduleOptions options) {
+    public Set<CourseSection> scheduleCourses(ScheduleOptions options) {
         CourseScheduler scheduler = new SingleTermCourseScheduler(new MinimizeTimeAtSchoolScorer(), pool);
-        PriorityQueue<Set<Course>> courses = new PriorityQueue<>(Comparator.comparingInt(Set::size));
+        PriorityQueue<Set<CourseSection>> courseSections = new PriorityQueue<>(Comparator.comparingInt(Set::size));
         CoursesFilterer filterer = createFilterer(options);
 
         for(String name : options.getCourses()) {
             getOrRetrieveCourses(options.getSessyr(), options.getSesscd(), new CourseString(name))
                     .stream()
                     .filter(c -> !isVantage(c))
-                    .collect(Collectors.groupingBy(Course::getActivity, Collectors.toSet()))
+                    .collect(Collectors.groupingBy(CourseSection::getActivity, Collectors.toSet()))
                     .values()
                     .forEach(set -> {
-                        Course course = checkNotNull(Iterables.getFirst(set, null));
-                        String courseName = course.getDept() + " " + course.getId();
-                        Set<Course> filtered = filterer.filter(set);
+                        CourseSection section = checkNotNull(Iterables.getFirst(set, null));
+                        String courseName = section.getDept() + " " + section.getId();
+                        Set<CourseSection> filtered = filterer.filter(set);
                         if(filtered.isEmpty()) {
-                            throw new NoValidScheduleException("No " + course.getActivity().toString().toLowerCase() +
+                            throw new NoValidScheduleException("No " + section.getActivity().toString().toLowerCase() +
                                     "s for " + courseName + " fit the criteria");
                         }
-                        courses.add(filtered);
+                        courseSections.add(filtered);
                     });
         }
-        return scheduler.scheduleCourses(courses);
+        return scheduler.scheduleCourses(courseSections);
     }
 
     private CoursesFilterer createFilterer(ScheduleOptions options) {
@@ -79,25 +79,25 @@ public class CourseSchedulingService {
         return allStatuses;
     }
 
-    private Set<Course> getOrRetrieveCourses(int sessyr, char sesscd, CourseString courseName){
-        HashMap<CourseString, Set<Course>> coursesMap = coursesCache.get(sessyr,sesscd);
+    private Set<CourseSection> getOrRetrieveCourses(int sessyr, char sesscd, CourseString courseName){
+        HashMap<CourseString, Set<CourseSection>> coursesMap = coursesCache.get(sessyr,sesscd);
         if(coursesMap == null) {
             coursesMap = Maps.newHashMap();
             coursesCache.put(sessyr,sesscd,coursesMap);
         }
-        Set<Course> courses = coursesMap.get(courseName);
-        if(courses == null) {
-            courses = new SSCCourseRetriever(sessyr, sesscd).retrieve(courseName);
-            coursesMap.put(courseName, courses);
+        Set<CourseSection> sections = coursesMap.get(courseName);
+        if(sections == null) {
+            sections = new SSCCourseRetriever(sessyr, sesscd).retrieve(courseName);
+            coursesMap.put(courseName, sections);
         }
-        if(courses.isEmpty()) {
+        if(sections.isEmpty()) {
             throw new NoValidScheduleException("No sections found for course: " + courseName.getCourse() + " in " +
                     sessyr + sesscd);
         }
-        return courses;
+        return sections;
     }
 
-    private boolean isVantage(Course course) {
+    private boolean isVantage(CourseSection course) {
         return course.getSection().startsWith("V");
     }
 }

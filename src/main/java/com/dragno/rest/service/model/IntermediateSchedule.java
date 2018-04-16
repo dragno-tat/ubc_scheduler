@@ -7,25 +7,25 @@ import java.util.Set;
 public class IntermediateSchedule {
 
     private Schedule schedule;
-    private Set<Course> courses;
+    private Set<CourseSection> courseSections;
 
     public IntermediateSchedule(){
         this.schedule = new Schedule();
-        this.courses = Sets.newHashSet();
+        this.courseSections = Sets.newHashSet();
     }
 
-    public IntermediateSchedule(IntermediateSchedule otherWithCoursesToCopy, Schedule newSchedule, Course courseToAdd) {
+    public IntermediateSchedule(IntermediateSchedule otherWithCoursesToCopy, Schedule newSchedule, CourseSection sectionToAdd) {
         this.schedule = newSchedule;
-        this.courses = Sets.newHashSet(otherWithCoursesToCopy.courses);
-        this.courses.add(courseToAdd);
+        this.courseSections = Sets.newHashSet(otherWithCoursesToCopy.courseSections);
+        this.courseSections.add(sectionToAdd);
     }
 
     public Schedule getSchedule() {
         return schedule;
     }
 
-    public Set<Course> getCourses() {
-        return Sets.newHashSet(courses);
+    public Set<CourseSection> getCourseSections() {
+        return Sets.newHashSet(courseSections);
     }
 
 }

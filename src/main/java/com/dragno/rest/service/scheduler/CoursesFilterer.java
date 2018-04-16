@@ -15,52 +15,52 @@ import static com.google.common.collect.Sets.newHashSet;
  */
 public class CoursesFilterer {
 
-    private Predicate<Course> filter;
+    private Predicate<CourseSection> filter;
 
-    private CoursesFilterer(Predicate<Course> filter) {
+    private CoursesFilterer(Predicate<CourseSection> filter) {
         this.filter = filter;
     }
 
-    public Set<Course> filter(Set<Course> courses) {
-        return courses.stream()
+    public Set<CourseSection> filter(Set<CourseSection> sections) {
+        return sections.stream()
                       .filter(filter)
                       .collect(Collectors.toSet());
     }
 
     public static class Builder {
 
-        private Set<Predicate<Course>> predicates;
+        private Set<Predicate<CourseSection>> predicates;
 
         public Builder() {
             this.predicates = newHashSet();
         }
 
         public Builder term(int term){
-            predicates.add(course -> term == course.getTerm());
+            predicates.add(section -> term == section.getTerm());
             return this;
         }
 
         public Builder statuses(Set<Status> statuses){
-            predicates.add(course -> statuses.contains(course.getStatus()));
+            predicates.add(section -> statuses.contains(section.getStatus()));
             return this;
         }
 
         public Builder activity(Activity activity){
-            predicates.add(course -> activity == course.getActivity());
+            predicates.add(section -> activity == section.getActivity());
             return this;
         }
 
         public Builder days(Set<Day> days){
             Set<Day> undesiredDays = Sets.newHashSet(Day.values());
             undesiredDays.removeAll(days);
-            predicates.add(course -> course.getSchedule().cardinality(undesiredDays) == 0);
+            predicates.add(section -> section.getSchedule().cardinality(undesiredDays) == 0);
             return this;
         }
 
         public Builder breaks(Set<Schedule> breaks) {
-            predicates.add(course -> {
+            predicates.add(section -> {
                 for(Schedule b : breaks) {
-                    if(course.getSchedule().intersects(b)) {
+                    if(section.getSchedule().intersects(b)) {
                         return false;
                     }
                 }
@@ -70,12 +70,12 @@ public class CoursesFilterer {
         }
 
         public Builder before(LocalTime endTime){
-            predicates.add(course -> course.getSchedule().endsBefore(endTime));
+            predicates.add(section -> section.getSchedule().endsBefore(endTime));
             return this;
         }
 
         public Builder after(LocalTime startTime){
-            predicates.add(course -> course.getSchedule().startsAfter(startTime));
+            predicates.add(section -> section.getSchedule().startsAfter(startTime));
             return this;
         }
 

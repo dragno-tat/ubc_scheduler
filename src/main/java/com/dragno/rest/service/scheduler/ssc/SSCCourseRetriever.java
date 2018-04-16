@@ -1,6 +1,6 @@
 package com.dragno.rest.service.scheduler.ssc;
 
-import com.dragno.rest.service.model.Course;
+import com.dragno.rest.service.model.CourseSection;
 import com.dragno.rest.service.model.CourseString;
 import com.dragno.rest.service.model.builder.SSCParametersDataBuilder;
 import com.dragno.rest.service.scheduler.CourseRetriever;
@@ -30,7 +30,7 @@ public class SSCCourseRetriever implements CourseRetriever {
     }
 
     @Override
-    public Set<Course> retrieve(CourseString course) {
+    public Set<CourseSection> retrieve(CourseString course) {
         Document document = retrieveDocument(course);
         return new SSCCourseDocumentParser().parseDocument(course, document);
     }

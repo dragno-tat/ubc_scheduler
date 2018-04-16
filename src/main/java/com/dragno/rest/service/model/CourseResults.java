@@ -13,11 +13,11 @@ public class CourseResults {
     private char sesscd;
 
     @JsonProperty("courses")
-    private Set<Course> courses;
+    private Set<CourseSection> courses;
 
 
 
-    public CourseResults(int sessyr, char sesscd, Set<Course> courses) {
+    public CourseResults(int sessyr, char sesscd, Set<CourseSection> courses) {
         this.sessyr = sessyr;
         this.sesscd = sesscd;
         this.courses = courses;

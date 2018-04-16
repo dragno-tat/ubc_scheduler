@@ -1,6 +1,6 @@
 package com.dragno.rest.service.scheduler;
 
-import com.dragno.rest.service.model.Course;
+import com.dragno.rest.service.model.CourseSection;
 import com.dragno.rest.service.model.IntermediateSchedule;
 import com.dragno.rest.service.model.Schedule;
 
@@ -21,19 +21,19 @@ public class CourseSchedulingTask extends RecursiveAction {
 
     private ScheduleScorer scorer;
     private ConcurrentLinkedQueue<IntermediateSchedule> results;
-    private PriorityQueue<Set<Course>> availableCourses;
+    private PriorityQueue<Set<CourseSection>> availableSections;
     private IntermediateSchedule intermediateSchedule;
     private Phaser phaser;
 
-    public CourseSchedulingTask(PriorityQueue<Set<Course>> availableCourses, ScheduleScorer scorer,
+    public CourseSchedulingTask(PriorityQueue<Set<CourseSection>> availableSections, ScheduleScorer scorer,
             ConcurrentLinkedQueue<IntermediateSchedule> results, Phaser phaser) {
-        this(availableCourses, new IntermediateSchedule(), scorer, results, phaser);
+        this(availableSections, new IntermediateSchedule(), scorer, results, phaser);
     }
 
-    private CourseSchedulingTask(PriorityQueue<Set<Course>> availableCourses, IntermediateSchedule
+    private CourseSchedulingTask(PriorityQueue<Set<CourseSection>> availableSections, IntermediateSchedule
             intermediateSchedule, ScheduleScorer scorer, ConcurrentLinkedQueue<IntermediateSchedule> results,
             Phaser phaser) {
-        this.availableCourses = new PriorityQueue<>(availableCourses);
+        this.availableSections = new PriorityQueue<>(availableSections);
         this.intermediateSchedule = intermediateSchedule;
         this.scorer = scorer;
         this.results = results;
@@ -43,7 +43,7 @@ public class CourseSchedulingTask extends RecursiveAction {
 
     @Override
     protected void compute() {
-        if (availableCourses.size() <= PARALLEL_SIZE_LIMIT) {
+        if (availableSections.size() <= PARALLEL_SIZE_LIMIT) {
             computeSequentially();
         } else {
             forkTasks();
@@ -52,42 +52,42 @@ public class CourseSchedulingTask extends RecursiveAction {
     }
 
     private void computeSequentially() {
-        checkState(availableCourses.size() == 1); //method needs to be modified if limit increased
+        checkState(availableSections.size() == 1); //method needs to be modified if limit increased
         int bestScore = Integer.MAX_VALUE;
         Schedule bestFullSchedule = null;
-        Course bestCourse = null;
-        for (Course course : availableCourses.remove()) {
-            if (fitsSchedule(course)) {
-                Schedule fullSchedule = intermediateSchedule.getSchedule().or(course.getSchedule());
+        CourseSection bestSection = null;
+        for (CourseSection section : availableSections.remove()) {
+            if (fitsSchedule(section)) {
+                Schedule fullSchedule = intermediateSchedule.getSchedule().or(section.getSchedule());
                 int score = scorer.score(fullSchedule);
                 if (score < bestScore) {
                     bestScore = score;
                     bestFullSchedule = fullSchedule;
-                    bestCourse = course;
+                    bestSection = section;
                 }
             }
         }
         if (bestFullSchedule != null) {
-            results.add(new IntermediateSchedule(intermediateSchedule, bestFullSchedule, bestCourse));
+            results.add(new IntermediateSchedule(intermediateSchedule, bestFullSchedule, bestSection));
         }
     }
 
-    private boolean fitsSchedule(Course course) {
-        return !course.getSchedule().intersects(intermediateSchedule.getSchedule());
+    private boolean fitsSchedule(CourseSection section) {
+        return !section.getSchedule().intersects(intermediateSchedule.getSchedule());
     }
 
     private void forkTasks() {
-        for (Course course : availableCourses.remove()) {
-            if (fitsSchedule(course)) {
-                createSubTask(course).fork();
+        for (CourseSection section : availableSections.remove()) {
+            if (fitsSchedule(section)) {
+                createSubTask(section).fork();
             }
         }
     }
 
-    private CourseSchedulingTask createSubTask(Course course) {
-        Schedule mergedSchedule = intermediateSchedule.getSchedule().or(course.getSchedule());
-        return new CourseSchedulingTask(availableCourses,
-                new IntermediateSchedule(intermediateSchedule, mergedSchedule, course),
+    private CourseSchedulingTask createSubTask(CourseSection section) {
+        Schedule mergedSchedule = intermediateSchedule.getSchedule().or(section.getSchedule());
+        return new CourseSchedulingTask(availableSections,
+                new IntermediateSchedule(intermediateSchedule, mergedSchedule, section),
                 scorer, results, phaser);
     }
 

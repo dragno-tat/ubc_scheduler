@@ -1,7 +1,7 @@
 package com.dragno.rest.service.scheduler;
 
 import com.dragno.rest.service.exception.NoValidScheduleException;
-import com.dragno.rest.service.model.Course;
+import com.dragno.rest.service.model.CourseSection;
 import com.dragno.rest.service.model.IntermediateSchedule;
 import com.google.common.collect.Queues;
 
@@ -26,22 +26,22 @@ public class SingleTermCourseScheduler implements CourseScheduler {
     }
 
     @Override
-    public Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses) {
+    public Set<CourseSection> scheduleCourses(PriorityQueue<Set<CourseSection>> sections) {
         ConcurrentLinkedQueue<IntermediateSchedule> results = Queues.newConcurrentLinkedQueue();
-        executeAndAwaitCompletion(courses, results);
+        executeAndAwaitCompletion(sections, results);
         return getBestSchedule(results);
     }
 
-    private void executeAndAwaitCompletion(PriorityQueue<Set<Course>> availableCourses,
+    private void executeAndAwaitCompletion(PriorityQueue<Set<CourseSection>> availableSections,
             ConcurrentLinkedQueue<IntermediateSchedule> results) {
         Phaser phaser = new Phaser(1);
-        pool.execute(new CourseSchedulingTask(availableCourses, scorer, results, phaser));
+        pool.execute(new CourseSchedulingTask(availableSections, scorer, results, phaser));
         phaser.arriveAndAwaitAdvance();
     }
 
-    private Set<Course> getBestSchedule(ConcurrentLinkedQueue<IntermediateSchedule> results) {
+    private Set<CourseSection> getBestSchedule(ConcurrentLinkedQueue<IntermediateSchedule> results) {
         Optional<IntermediateSchedule> schedule = results.stream().min((schedule1, schedule2) -> scorer.compare
                 (schedule1.getSchedule(), schedule2.getSchedule()));
-        return schedule.orElseThrow(NoValidScheduleException::new).getCourses();
+        return schedule.orElseThrow(NoValidScheduleException::new).getCourseSections();
     }
 }

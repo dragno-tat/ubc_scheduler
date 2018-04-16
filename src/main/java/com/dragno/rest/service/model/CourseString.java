@@ -25,7 +25,7 @@ public class CourseString {
     }
 
     private void validateString(String course) {
-        checkState(course.matches(REGEX_VALIDATOR), format("Course {0} is in an invalid format", course));
+        checkState(course.matches(REGEX_VALIDATOR), format("CourseSection {0} is in an invalid format", course));
     }
 
     private String normalize(String course) {
@@ -39,7 +39,7 @@ public class CourseString {
     private String insertSpace(String course) {
         Matcher matcher = Pattern.compile("\\d").matcher(course);
         if(!matcher.find()){
-            throw new IllegalStateException(format("Course {0} is in an invalid format", course));
+            throw new IllegalStateException(format("CourseSection {0} is in an invalid format", course));
         }
         int firstIntIndex = matcher.start();
         course = new StringBuilder(course).insert(firstIntIndex, " ").toString();

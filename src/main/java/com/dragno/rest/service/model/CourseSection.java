@@ -7,7 +7,7 @@ import com.google.common.base.MoreObjects;
 /**
  * Created by Anthony on 7/8/2017.
  */
-public class Course {
+public class CourseSection {
 
     private String dept;
     private int id;
@@ -18,7 +18,7 @@ public class Course {
     @JsonSerialize(using = ScheduleSerializer.class)
     private Schedule schedule;
 
-    public Course(String dept, int id, Status status, String section,
+    public CourseSection(String dept, int id, Status status, String section,
                   Activity activity, int term, Schedule schedule) {
         this.dept = dept;
         this.id = id;
@@ -66,27 +66,27 @@ public class Course {
             return false;
         }
 
-        Course course = (Course) o;
+        CourseSection section = (CourseSection) o;
 
-        if (id != course.id) {
+        if (id != section.id) {
             return false;
         }
-        if (term != course.term) {
+        if (term != section.term) {
             return false;
         }
-        if (!dept.equals(course.dept)) {
+        if (!dept.equals(section.dept)) {
             return false;
         }
-        if (status != course.status) {
+        if (status != section.status) {
             return false;
         }
-        if (!section.equals(course.section)) {
+        if (!this.section.equals(section.section)) {
             return false;
         }
-        if (activity != course.activity) {
+        if (activity != section.activity) {
             return false;
         }
-        return schedule.equals(course.schedule);
+        return schedule.equals(section.schedule);
     }
 
     @Override

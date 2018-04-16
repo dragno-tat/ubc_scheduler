@@ -26,7 +26,7 @@ public class CourseSchedulingController {
             errorMessage = "No courses selected";
         }
         if(options.getTerm() != 1 && options.getTerm() != 2) {
-            errorMessage = "Course term must be 1 or 2";
+            errorMessage = "CourseSection term must be 1 or 2";
         }
         if(options.getDays().isEmpty()) {
             errorMessage = "No days selected";

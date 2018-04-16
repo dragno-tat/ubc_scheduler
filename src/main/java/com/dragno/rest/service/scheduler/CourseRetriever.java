@@ -1,6 +1,6 @@
 package com.dragno.rest.service.scheduler;
 
-import com.dragno.rest.service.model.Course;
+import com.dragno.rest.service.model.CourseSection;
 import com.dragno.rest.service.model.CourseString;
 
 import java.util.Set;
@@ -10,5 +10,5 @@ import java.util.Set;
  */
 public interface CourseRetriever {
 
-    Set<Course> retrieve(CourseString course);
+    Set<CourseSection> retrieve(CourseString course);
 }

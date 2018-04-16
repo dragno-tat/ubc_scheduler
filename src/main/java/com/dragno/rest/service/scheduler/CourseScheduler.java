@@ -1,6 +1,6 @@
 package com.dragno.rest.service.scheduler;
 
-import com.dragno.rest.service.model.Course;
+import com.dragno.rest.service.model.CourseSection;
 
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -10,5 +10,5 @@ import java.util.Set;
  */
 public interface CourseScheduler {
 
-    Set<Course> scheduleCourses(PriorityQueue<Set<Course>> courses);
+    Set<CourseSection> scheduleCourses(PriorityQueue<Set<CourseSection>> sections);
 }

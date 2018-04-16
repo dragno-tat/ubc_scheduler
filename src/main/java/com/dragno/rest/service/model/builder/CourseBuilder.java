@@ -1,7 +1,7 @@
 package com.dragno.rest.service.model.builder;
 
 import com.dragno.rest.service.model.Activity;
-import com.dragno.rest.service.model.Course;
+import com.dragno.rest.service.model.CourseSection;
 import com.dragno.rest.service.model.Schedule;
 import com.dragno.rest.service.model.Status;
 
@@ -61,15 +61,15 @@ public class CourseBuilder {
         return schedule;
     }
 
-    public Course build() {
+    public CourseSection build() {
         validateFields();
-        return new Course(dept, id, status, section, activity, term, schedule);
+        return new CourseSection(dept, id, status, section, activity, term, schedule);
     }
 
     private void validateFields() {
         if (dept == null || id == 0 || status == null || section == null || activity == null || term == 0 ||
                 schedule == null) {
-            throw new IllegalStateException("All fields must be set to build a Course");
+            throw new IllegalStateException("All fields must be set to build a CourseSection");
         }
     }
 }

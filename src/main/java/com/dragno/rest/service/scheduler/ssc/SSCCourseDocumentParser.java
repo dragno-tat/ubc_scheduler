@@ -15,42 +15,42 @@ import java.util.Set;
  */
 class SSCCourseDocumentParser {
 
-    Set<Course> parseDocument(CourseString courseString, Document document) {
-        Set<Course> courses = Sets.newHashSet();
+    Set<CourseSection> parseDocument(CourseString courseString, Document document) {
+        Set<CourseSection> sections = Sets.newHashSet();
         Elements trTags = document.getElementsByTag("tr");
-        Course previousCourse = null;
+        CourseSection previousSection = null;
         for (Element tr : trTags) {
             if (isTrForCourse(tr)) {
-                previousCourse = handleCourseParsing(courseString, courses, previousCourse, tr);
+                previousSection = handleCourseParsing(courseString, sections, previousSection, tr);
             }
         }
-        return courses;
+        return sections;
     }
 
-    private Course handleCourseParsing(CourseString courseString, Set<Course> courses, Course previousCourse,
+    private CourseSection handleCourseParsing(CourseString courseString, Set<CourseSection> sections, CourseSection previousSection,
                                        Element tr) {
         CourseBuilder builder = new CourseBuilder()
                 .id(Integer.parseInt(courseString.getCourseId()))
                 .dept(courseString.getDepartment());
 
-        if (parseCourse(builder, tr, previousCourse)) {
+        if (parseCourse(builder, tr)) {
             if (isPartOfPreviousSection(builder.getSection())){
-                Schedule mergedSchedule = previousCourse.getSchedule().or(builder.getSchedule());
-                builder.schedule(mergedSchedule).section(previousCourse.getSection());
-                courses.remove(previousCourse);
+                Schedule mergedSchedule = previousSection.getSchedule().or(builder.getSchedule());
+                builder.schedule(mergedSchedule).section(previousSection.getSection());
+                sections.remove(previousSection);
             }
-            Course course = builder.build();
-            courses.add(course);
-            previousCourse = course;
+            CourseSection section = builder.build();
+            sections.add(section);
+            previousSection = section;
         }
-        return previousCourse;
+        return previousSection;
     }
 
     private boolean isTrForCourse(Element tr) {
         return tr.className().contains("section");
     }
 
-    private boolean parseCourse(CourseBuilder builder, Element tr, Course previousCourse) {
+    private boolean parseCourse(CourseBuilder builder, Element tr) {
         Elements tdTags = tr.getElementsByTag("td");
         try {
             builder.status(parseStatus(tdTags.get(0)))
