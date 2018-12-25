@@ -100,7 +100,7 @@ let displayCourseResults = function (results) {
             td.rowSpan = rowSpan.toString();
             const firstLine = document.createTextNode(course.dept + ' ' + course.id.toString());
             const secondLineLink = document.createElement('a');
-            secondLineLink.href = `https://courses.students.ubc.ca/cs/main?pname=subjarea&tname=subjareas&req=5&dept=${course.dept}&course=${course.id}&section=${course.section}&sessyr=${results.sessyr}&sesscd=${results.sesscd}`;
+            secondLineLink.href = `https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-section&dept=${course.dept}&course=${course.id}&section=${course.section}&sessyr=${results.sessyr}&sesscd=${results.sesscd}`;
             const secondLineText = document.createTextNode(course.section);
             secondLineLink.appendChild(secondLineText);
             const br = document.createElement('br');

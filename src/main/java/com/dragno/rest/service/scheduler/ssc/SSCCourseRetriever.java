@@ -18,7 +18,7 @@ import static java.text.MessageFormat.format;
  */
 public class SSCCourseRetriever implements CourseRetriever {
 
-    private static final String BASE_URL = "https://courses.students.ubc.ca/cs/main";
+    private static final String BASE_URL = "https://courses.students.ubc.ca/cs/courseschedule";
 
     private int sessyr;
 

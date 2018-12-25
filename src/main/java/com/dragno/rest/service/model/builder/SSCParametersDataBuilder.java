@@ -9,12 +9,6 @@ import java.util.Map;
  */
 public class SSCParametersDataBuilder {
 
-    private String pname;
-
-    private String tname;
-
-    private String req;
-
     private String dept;
 
     private String course;
@@ -46,8 +40,7 @@ public class SSCParametersDataBuilder {
     public Map<String, String> build() {
         return new ImmutableMap.Builder<String, String>()
                 .put("pname", "subjarea")
-                .put("tname", "subjarea")
-                .put("req", "3")
+                .put("tname", "subj-course")
                 .put("dept", dept)
                 .put("course", course)
                 .put("sessyr", Integer.toString(sessyr))
